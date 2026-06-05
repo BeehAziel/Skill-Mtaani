@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Skill Mtaani – Kasarani Youth Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Skill<span>Mtaani</span></div>
+  <ul class="nav-links">
+    <li><a href="#skills" onclick="filterByCategory('')">Skills</a></li>
+    <li><a href="#mentors">Mentors</a></li>
+    <li><a href="#community">Community</a></li>
+  </ul>
+  <div class="nav-right">
+    <input type="search" id="searchInput" class="search-box" placeholder="Search skills..." onkeyup="handleSearch()"/>
+    <button class="nav-cta" onclick="document.getElementById('post-section').scrollIntoView({behavior:'smooth'})">+ Post Skill</button>
+    <button class="user-btn" id="userBtn" onclick="toggleUserMenu()">👤</button>
+  </div>
+  <div class="user-menu" id="userMenu">
+    <div class="user-menu-item" onclick="openLoginModal()">Login / Sign Up</div>
+    <div class="user-menu-item" onclick="viewMySkills()">My Skills</div>
+    <div class="user-menu-item" onclick="viewMyProfile()">My Profile</div>
+    <hr class="menu-divider"/>
+    <div class="user-menu-item" onclick="logout()">Logout</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><span>Kasarani</span> Kenya's Youth Skill Hub</div>
+  <h1>Learn. Teach.<br><em>Grow Pamoja.</em></h1>
+  <p class="hero-sub">Skill Mtaani ni platform yako — post your skills, find a mentor, na tuunganike kama youth wa Kasarani.</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="document.getElementById('post-section').scrollIntoView({behavior:'smooth'})">Share Your Skill 🚀</button>
+    <button class="btn-outline" onclick="document.getElementById('skills').scrollIntoView({behavior:'smooth'})">Tafuta Skill</button>
+  </div>
+  <div class="hero-stats">
+    <div><div class="stat-num">340+</div><div class="stat-label">Youth Members</div></div>
+    <div><div class="stat-num">80+</div><div class="stat-label">Skills Listed</div></div>
+    <div><div class="stat-num">12</div><div class="stat-label">Wards Covered</div></div>
+    <div><div class="stat-num">100%</div><div class="stat-label">Free to Join</div></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-inner" id="ticker">
+    <strong>🎨 Graphic Design</strong><span>•</span> Photography <span>•</span>
+    <strong>💻 Web Dev</strong> <span>•</span> Tailoring & Fashion <span>•</span>
+    <strong>🎵 Music Production</strong> <span>•</span> Barbering <span>•</span>
+    <strong>📱 Social Media</strong> <span>•</span> Cooking & Catering <span>•</span>
+    <strong>🚗 Driving & Logistics</strong> <span>•</span> Video Editing <span>•</span>
+    <strong>🏋️ Fitness Coaching</strong> <span>•</span> Bridal Makeup <span>•</span>
+    <strong>🎨 Graphic Design</strong><span>•</span> Photography <span>•</span>
+    <strong>💻 Web Dev</strong> <span>•</span> Tailoring & Fashion <span>•</span>
+    <strong>🎵 Music Production</strong> <span>•</span> Barbering <span>•</span>
+    <strong>📱 Social Media</strong> <span>•</span> Cooking & Catering <span>•</span>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="categories scroll-fade" id="categories">
+  <div class="section-header">
+    <div class="section-title">Browse by Category</div>
+    <a class="see-all" onclick="filterByCategory('')">Clear filter</a>
+  </div>
+  <div class="cats-grid">
+    <div class="cat-chip" onclick="filterByCategory('Creative Arts')"><span class="cat-icon">🎨</span><div class="cat-name">Creative Arts</div><div class="cat-count" id="count-Creative Arts">18 skills</div></div>
+    <div class="cat-chip" onclick="filterByCategory('Tech & Digital')"><span class="cat-icon">💻</span><div class="cat-name">Tech & Digital</div><div class="cat-count" id="count-Tech & Digital">22 skills</div></div>
+    <div class="cat-chip" onclick="filterByCategory('Food & Catering')"><span class="cat-icon">🍳</span><div class="cat-name">Food & Catering</div><div class="cat-count" id="count-Food & Catering">11 skills</div></div>
+    <div class="cat-chip" onclick="filterByCategory('Fashion & Beauty')"><span class="cat-icon">✂️</span><div class="cat-name">Fashion & Beauty</div><div class="cat-count" id="count-Fashion & Beauty">14 skills</div></div>
+    <div class="cat-chip" onclick="filterByCategory('Music & Audio')"><span class="cat-icon">🎵</span><div class="cat-name">Music & Audio</div><div class="cat-count" id="count-Music & Audio">9 skills</div></div>
+    <div class="cat-chip" onclick="filterByCategory('Health & Fitness')"><span class="cat-icon">🏋️</span><div class="cat-name">Health & Fitness</div><div class="cat-count" id="count-Health & Fitness">7 skills</div></div>
+    <div class="cat-chip" onclick="filterByCategory('Photography')"><span class="cat-icon">📸</span><div class="cat-name">Photography</div><div class="cat-count" id="count-Photography">10 skills</div></div>
+    <div class="cat-chip" onclick="filterByCategory('Transport & Trade')"><span class="cat-icon">🚗</span><div class="cat-name">Transport & Trade</div><div class="cat-count" id="count-Transport & Trade">6 skills</div></div>
+  </div>
+</section>
+
+<!-- SKILLS GRID -->
+<section class="section scroll-fade" id="skills">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Featured Skills 🔥</div>
+      <div class="filter-tag" id="filterTag"></div>
+    </div>
+    <a class="see-all" href="#skills">See all →</a>
+  </div>
+  <div class="skills-grid" id="skillsGrid"></div>
+  <div class="no-results" id="noResults" style="display: none;">
+    <p>No skills found. Try searching or browse other categories! 🔍</p>
+  </div>
+</section>
+
+<!-- MENTORS -->
+<section class="section scroll-fade" id="mentors">
+  <div class="section-header">
+    <div class="section-title">Senior Mentors 🎓</div>
+    <a class="see-all" href="#">Join as Mentor →</a>
+  </div>
+  <div class="mentors-grid" id="mentorsGrid"></div>
+</section>
+
+<!-- POST SKILL -->
+<section class="post-section scroll-fade" id="post-section">
+  <div class="post-card">
+    <div class="post-title">Share Ujuzi Wako 💡</div>
+    <div class="post-sub">Got a skill? Share it with the Kasarani youth community.</div>
+    <div class="form-row">
+      <input class="form-input" placeholder="Your name" id="f-name"/>
+      <input class="form-input" placeholder="Your ward (e.g. Clayworks)" id="f-ward"/>
+    </div>
+    <div class="form-row">
+      <input class="form-input" type="tel" placeholder="Phone (WhatsApp)" id="f-phone"/>
+      <input class="form-input" placeholder="Your location" id="f-location"/>
+    </div>
+    <div class="form-row">
+      <input class="form-input" placeholder="Skill title (e.g. Graphic Design)" id="f-skill"/>
+      <select class="form-select" id="f-cat" aria-label="Category">
+        <option value="" disabled selected>Category</option>
+        <option>Creative Arts</option>
+        <option>Tech & Digital</option>
+        <option>Food & Catering</option>
+        <option>Fashion & Beauty</option>
+        <option>Music & Audio</option>
+        <option>Health & Fitness</option>
+        <option>Photography</option>
+        <option>Transport & Trade</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <textarea class="form-textarea" placeholder="Describe your skill... (What do you teach? How do people reach you?)" id="f-desc"></textarea>
+    <div class="form-row">
+      <input class="form-input" type="number" placeholder="Price per session (KES)" id="f-price"/>
+      <input class="form-input" placeholder="Availability (e.g. Weekends)" id="f-availability"/>
+    </div>
+    <br/>
+    <button class="form-submit" onclick="submitSkill()">Post My Skill 🚀</button>
+    <button class="form-submit" style="background: transparent; border: 1px solid #2a2a2a; color: #aaa;" onclick="resetForm()">Clear</button>
+  </div>
+</section>
+
+<!-- COMMUNITY WALL -->
+<section class="section scroll-fade" id="community">
+  <div class="section-header">
+    <div class="section-title">Community Wall 📣</div>
+    <a class="see-all" href="#">View all posts →</a>
+  </div>
+  <div class="wall-grid" id="wallGrid"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  Built with ❤️ for the Youth of <strong>Kasarani Constituency</strong> · Nairobi, Kenya
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+<!-- AUTH MODAL -->
+<div class="auth-modal-overlay" id="authModal">
+  <div class="auth-modal">
+    <button class="modal-close" onclick="closeAuthModal()">✕</button>
+    
+    <!-- LOGIN FORM -->
+    <div id="loginForm" class="auth-form active">
+      <div class="auth-header">
+        <h2>Welcome Back! 👋</h2>
+        <p>Sign in to access your skills and profile</p>
+      </div>
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Email or Username</label>
+          <input type="text" id="loginEmail" placeholder="your@email.com or username" required/>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="At least 6 characters" required/>
+        </div>
+        <label class="checkbox">
+          <input type="checkbox" id="rememberMe"/> Remember me
+        </label>
+        <button type="submit" class="auth-btn">Sign In</button>
+        <div class="auth-divider">OR</div>
+        <div class="social-btns">
+          <button type="button" class="social-btn" onclick="loginWithGoogle()">Google</button>
+          <button type="button" class="social-btn" onclick="loginWithWhatsApp()">WhatsApp</button>
+        </div>
+      </form>
+      <div class="auth-footer">
+        Don't have an account? 
+        <a href="#" onclick="toggleAuthForm('register')">Create one</a>
+      </div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="registerForm" class="auth-form">
+      <div class="auth-header">
+        <h2>Join Skill Mtaani! 🎉</h2>
+        <p>Create account & start sharing your skills</p>
+      </div>
+      <form onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="regFullName" placeholder="Your full name" required/>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="regEmail" placeholder="your@email.com" required/>
+        </div>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="regUsername" placeholder="username123" required/>
+        </div>
+        <div class="form-group">
+          <label>Phone (WhatsApp)</label>
+          <input type="tel" id="regPhone" placeholder="+254701234567" required/>
+        </div>
+        <div class="form-group">
+          <label>Ward/Location</label>
+          <input type="text" id="regWard" placeholder="e.g. Kasarani, Baba Dogo" required/>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="regPassword" placeholder="At least 8 characters" required/>
+          <small class="pwd-hint">Passwords must be at least 8 characters</small>
+        </div>
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input type="password" id="regConfirmPassword" placeholder="Repeat password" required/>
+        </div>
+        <label class="checkbox">
+          <input type="checkbox" id="agreeTerms" required/> I agree to terms & conditions
+        </label>
+        <button type="submit" class="auth-btn">Create Account</button>
+      </form>
+      <div class="auth-footer">
+        Already have an account? 
+        <a href="#" onclick="toggleAuthForm('login')">Sign in</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
