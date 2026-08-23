@@ -1,0 +1,50 @@
+# MVP: Northstar Inventory Sync Service
+
+**Client:** Northstar Retail Co.
+**Purpose:** Keep the support tool's "is this in stock?" answers accurate by syncing warehouse stock data on a schedule and exposing it through a query endpoint.
+
+---
+
+## 1. Problem
+
+Support staff need fast, reliable stock-level answers for customers. Calling the warehouse system directly from the support tool on every question would be slow and puts unnecessary load on the warehouse API. We need a service that sits in between: pulls stock data on a schedule, holds a local copy, and answers queries instantly from that copy.
+
+## 2. Goal
+
+Ship the smallest version of this service that can be trusted in front of real support agents — accurate enough, fast enough, and doesn't fall over when the warehouse API has a bad moment.
+
+## 3. Scope
+
+### In scope (MVP)
+| Feature | Description |
+|---|---|
+| Scheduled poll | Poll the warehouse API every 5 minutes for current stock levels |
+| Local cache | Store the latest known quantity per SKU, with a timestamp of when it was last synced |
+| Query endpoint | `GET /stock/{sku}` — returns quantity and sync freshness for a given SKU |
+| Graceful degradation | If a poll cycle fails, keep serving the last known good value instead of erroring |
+| Not-found handling | Querying an unknown SKU returns a clean 404, not a crash |
+
+### Out of scope (MVP)
+| Feature | Why it's cut |
+|---|---|
+| Historical stock trends / analytics | Not needed to answer "is this in stock right now" |
+| Multi-warehouse aggregation | Single warehouse source assumed for MVP |
+| Authentication / rate-limiting on the query endpoint | Internal tool consumer only, at MVP stage |
+| Any UI | This is a backend service; the support tool is the consumer |
+
+These are deliberate cuts to ship fast, not oversights — each can be added once the core loop is proven.
+
+## 4. Design note (forward-looking)
+
+The cache is built behind a small interface — a `StockStore` with `get(sku)` and `update(sku, qty, timestamp)` — rather than wiring polling logic directly into the query endpoint. This keeps the *read path* (query endpoint) decoupled from the *write path* (polling). If the sync mechanism changes later, only the write path needs to change.
+
+## 5. Acceptance Criteria
+
+1. The polling job runs on its 5-minute schedule and updates the cache.
+2. `GET /stock/{sku}` returns the correct cached quantity for a known SKU.
+3. `GET /stock/{sku}` for an unknown SKU returns a 404, not a 500.
+4. A simulated warehouse API failure does not take down the query endpoint — the last good value is still served.
+
+## 6. Success Metric
+
+Support agents get a stock answer for any known SKU within the same 5-minute freshness window the poll cycle guarantees, with zero downtime on the query endpoint even when the warehouse API is unavailable.
